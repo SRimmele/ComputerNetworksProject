@@ -25,10 +25,14 @@ namespace ChatApp.Hubs{
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task SendMessage(string message, string userName){
-            _logger.LogInformation($"{message} Received from {userName}");
-            await Clients.All.SendAsync("sendMessage", message, userName);
+        public async Task SendMessage(Message message){
+            //_logger.LogInformation($"{message} Received from {userName}");
+            await Clients.All.SendAsync("sendMessage", message);
         } 
+    }
 
+    public class Message{
+        public string userName{get; set;}
+        public string messageText{get; set;}
     }
 }

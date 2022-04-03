@@ -3,23 +3,36 @@
 @using Microsoft.AspNetCore.SignalR.Client; 
 @using ChatApp.Hubs; 
 
-
 @implements IDisposable
 
 @inject NavigationManager _navigationManager; 
 <h1>Chat</h1>
-<ul>
+<!--Display Messages Here--> 
+<div>
     @foreach (var message in messages)
     {
-        <li>
-            @message 
-        </li>
+        <div>
+            <p>
+            @message.messageText
+            </p>
+        </div>
     }
-</ul> 
+</div> 
+<!--Chat Box-->
+<div>
+    <div class="panel-footer">
+        <div class="input-group" id="myForm">
+            <input id="textMessageInput" @bind="messageText" type="text" class="form-control input-sm chat_input" placeholder="Write your message here...">
+        <button class="btn btn-primary" @onclick="Send">Send</button>
+        </div>
+    </div>
+</div>
 
 @code{ 
         private HubConnection hubConnection; 
-        private List<string> messages = new List<string>(); 
+        private List<Message> messages = new List<Message>(); 
+        private List<string> usernames = new List<string>(); 
+        private string messageText{get; set;}
 
         async protected override Task OnInitializedAsync()
         {
@@ -27,7 +40,11 @@
 
             var connectionURL = baseURL + ChatHub.hubPath; 
             hubConnection = new HubConnectionBuilder().WithUrl(connectionURL).Build(); 
-            hubConnection.On<string, string>("sendMessage", onReceiveMessage); 
+            hubConnection.On<Message>("ReceiveMessage", (message)=>
+                {
+                    messages.Add(message); 
+                    StateHasChanged(); 
+                }); 
             await hubConnection.StartAsync(); 
         }
 
@@ -41,10 +58,16 @@
             CloseHubConnection(); 
         }
 
-        public void onReceiveMessage(string message, string userName){
+        public void onReceiveMessage(string message, string username){
             messages.Add(message);
             StateHasChanged(); 
-        } 
+        }
 
+        public async Task Send(){
+            Message message = new Message(); 
+            message.messageText = messageText; 
+
+            await hubConnection.SendAsync("SendMessage", message); 
+        }
 }
 
