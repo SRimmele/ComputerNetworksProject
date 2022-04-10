@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 namespace ChatApp.Hubs{
     class ChatHub : Hub{
         public const string hubPath = "/ChatHub"; 
+        public const string sendPath = "/Send"; 
         private readonly ILogger<ChatHub> _logger;
 
         //construct
@@ -27,7 +28,7 @@ namespace ChatApp.Hubs{
 
         public async Task SendMessage(Message message){
             //_logger.LogInformation($"{message} Received from {userName}");
-            await Clients.All.SendAsync("sendMessage", message);
+            await Clients.All.SendAsync("SendMessage", message);
         } 
     }
 

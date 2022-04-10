@@ -58,12 +58,14 @@
             CloseHubConnection(); 
         }
 
-        public void onReceiveMessage(string message, string username){
+        public void onReceiveMessage(Message message){
             messages.Add(message);
             StateHasChanged(); 
         }
 
         public async Task Send(){
+            var baseURL = _navigationManager.BaseUri.Trim('/'); 
+            var connectionURL = baseURL + ChatHub.sendPath;
             Message message = new Message(); 
             message.messageText = messageText; 
 
