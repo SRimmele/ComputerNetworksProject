@@ -40,11 +40,7 @@
 
             var connectionURL = baseURL + ChatHub.hubPath; 
             hubConnection = new HubConnectionBuilder().WithUrl(connectionURL).Build(); 
-            hubConnection.On<Message>("ReceiveMessage", (message)=>
-                {
-                    messages.Add(message); 
-                    StateHasChanged(); 
-                }); 
+            hubConnection.On<Message>("SendMessage", onReceiveMessage); 
             await hubConnection.StartAsync(); 
         }
 
@@ -53,6 +49,11 @@
             await hubConnection.DisposeAsync(); 
             hubConnection = null; 
         }
+
+        public void onReceiveMessage(Message message){
+            messages.Add(message);
+            StateHasChanged(); 
+        } 
 
         public void Dispose(){
             CloseHubConnection(); 

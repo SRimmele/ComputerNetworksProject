@@ -27,7 +27,7 @@ namespace ChatApp.Hubs{
         }
 
         public async Task SendMessage(Message message){
-            //_logger.LogInformation($"{message} Received from {userName}");
+            _logger.LogInformation($"{message}");
             await Clients.All.SendAsync("SendMessage", message);
         } 
     }
