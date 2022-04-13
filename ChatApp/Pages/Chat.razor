@@ -2,6 +2,7 @@
 
 @using Microsoft.AspNetCore.SignalR.Client; 
 @using ChatApp.Hubs; 
+@using ChatApp.Models; 
 
 @implements IDisposable
 
@@ -13,7 +14,7 @@
     {
         <div>
             <p>
-            @message.messageText
+            @message.MessageText
             </p>
         </div>
     }
@@ -60,12 +61,11 @@
         }
 
         public async Task Send(){
-            var baseURL = _navigationManager.BaseUri.Trim('/'); 
-            var connectionURL = baseURL + ChatHub.sendPath;
             Message message = new Message(); 
-            message.messageText = messageText; 
+            message.MessageText = messageText; 
 
             await hubConnection.SendAsync("SendMessage", message); 
+            messageText = ""; 
         }
 }
 

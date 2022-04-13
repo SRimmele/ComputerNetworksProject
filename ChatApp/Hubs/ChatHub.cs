@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR; 
+using Microsoft.AspNetCore.Authentication.Cookies; 
 using Microsoft.Extensions.Logging; 
+using ChatApp.Models; 
 
 namespace ChatApp.Hubs{
     class ChatHub : Hub{
         public const string hubPath = "/ChatHub"; 
-        public const string sendPath = "/Send"; 
         private readonly ILogger<ChatHub> _logger;
 
         //construct
@@ -32,8 +33,6 @@ namespace ChatApp.Hubs{
         } 
     }
 
-    public class Message{
-        public string userName{get; set;}
-        public string messageText{get; set;}
-    }
+
+
 }
