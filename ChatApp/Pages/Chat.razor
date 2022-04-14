@@ -38,7 +38,6 @@
         async protected override Task OnInitializedAsync()
         {
             var baseURL = _navigationManager.BaseUri.Trim('/'); 
-
             var connectionURL = baseURL + ChatHub.hubPath; 
             hubConnection = new HubConnectionBuilder().WithUrl(connectionURL).Build(); 
             hubConnection.On<Message>("SendMessage", onReceiveMessage); 

@@ -1,7 +1,8 @@
 namespace ChatApp.Models{
-    public class Login
+    public class User
     {
         public string Username { get; set; }
+        public string IPAddress {get; set; }
     }
 
 }

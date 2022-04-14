@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ChatApp.Data;
 using ChatApp.Hubs; 
+using ChatApp.Repositories; 
 
 namespace ChatApp
 {
@@ -31,6 +32,8 @@ namespace ChatApp
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>(); 
+            services.AddTransient<UserRepository>(); 
+            services.AddHttpContextAccessor(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

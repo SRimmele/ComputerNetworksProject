@@ -1,0 +1,45 @@
+@using Microsoft.AspNetCore.Http; 
+@using ChatApp.Repositories; 
+@using ChatApp.Models; 
+
+@inject IHttpContextAccessor httpContextAccessor; 
+@inject UserRepository userRepository; 
+
+<input type="text" @bind="username">
+<button @onclick="login">Submit</button>
+<p>@error</p>
+
+@code{
+
+    private string username = ""; 
+    private string error = ""; 
+
+    private void login(){
+        if(registerUser() == false){
+            error = "Username is taken."; 
+        } 
+    }
+    private bool registerUser(){
+        if(userRepository.Read(getIPAdress()) == null){
+            if(userRepository.ReadAll().Any(u => u.Username == username)){
+                return false; 
+            }
+            var newUser = new User
+            {
+                Username = username, 
+                IPAddress = getIPAdress()
+            }; 
+            userRepository.Create(newUser); 
+        } 
+        return true; 
+    }
+
+    private string getIPAdress(){
+        var remoteIpAddress = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress;
+        if(remoteIpAddress?.IsIPv4MappedToIPv6 == true){
+            return remoteIpAddress.MapToIPv4().ToString(); 
+        }
+
+        return remoteIpAddress?.ToString(); 
+    }
+}

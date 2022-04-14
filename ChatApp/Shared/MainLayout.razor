@@ -1,4 +1,11 @@
-@inherits LayoutComponentBase
+@using Microsoft.AspNetCore.Http; 
+@using ChatApp.Repositories; 
+@using ChatApp.Components; 
+
+@inject IHttpContextAccessor httpContextAccessor; 
+@inject UserRepository userRepository; 
+@inherits LayoutComponentBase; 
+
 
 <div class="page">
     <div class="sidebar">
@@ -11,7 +18,42 @@
         </div>
 
         <div class="content px-4">
-            @Body
+            @if(isLoggedIn()){
+                @Body
+            }
+            else{
+                <Login/> 
+            }
         </div>
     </div>
 </div>
+
+@code{
+        protected override void OnAfterRender(bool firstRender)
+        {
+            UserRepository.Change += refresh; 
+            base.OnAfterRender(firstRender);
+        }
+    
+    private void refresh(object caller, EventArgs args){
+        StateHasChanged(); 
+    }
+
+    private bool isLoggedIn(){
+        return userRepository.Read(getIPAdress()) != null;
+    }
+        //Put into seperate Class *possibly*
+        private string getIPAdress(){
+        var remoteIpAddress = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress;
+        if(remoteIpAddress?.IsIPv4MappedToIPv6 == true){
+            return remoteIpAddress.MapToIPv4().ToString(); 
+        }
+
+        return remoteIpAddress?.ToString(); 
+    }
+}
+
+#pragma warning restore 1998
+#nullable restore
+#line 31 "c:/Users/Rimme/projects/ComputerNetworks/ComputerNetworksProject/ChatApp/Shared/MainLayout.razor"
+
