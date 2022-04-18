@@ -1,10 +1,12 @@
 @using Microsoft.AspNetCore.Http; 
 @using ChatApp.Repositories; 
 @using ChatApp.Models; 
+ 
 
 @inject IHttpContextAccessor httpContextAccessor; 
 @inject UserRepository userRepository; 
 
+<input type="color" /> 
 <input type="text" @bind="username">
 <button @onclick="login">Submit</button>
 <p>@error</p>
@@ -19,6 +21,7 @@
             error = "Username is taken."; 
         } 
     }
+
     private bool registerUser(){
         if(userRepository.Read(getIPAdress()) == null){
             if(userRepository.ReadAll().Any(u => u.Username == username)){

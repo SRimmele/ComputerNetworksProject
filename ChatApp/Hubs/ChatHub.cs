@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR; 
-using Microsoft.AspNetCore.Authentication.Cookies; 
 using Microsoft.Extensions.Logging; 
 using ChatApp.Models; 
 
