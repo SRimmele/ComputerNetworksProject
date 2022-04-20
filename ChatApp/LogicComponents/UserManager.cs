@@ -21,7 +21,7 @@ namespace ChatApp.LogicComponents
 
             return remoteIpAddress?.ToString();
         }
-        public bool registerUser(IHttpContextAccessor httpContextAccessor, string username)
+        public bool registerUser(IHttpContextAccessor httpContextAccessor, string username, string color)
         {
             if (_userRepository.Read(UserManager.getIPAdress(httpContextAccessor)) == null)
             {
@@ -32,6 +32,7 @@ namespace ChatApp.LogicComponents
                 var newUser = new User
                 {
                     Username = username,
+                    Color = color, 
                     IPAddress = UserManager.getIPAdress(httpContextAccessor)
                 };
                 _userRepository.Create(newUser);

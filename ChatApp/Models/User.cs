@@ -3,6 +3,7 @@ namespace ChatApp.Models{
     {
         public string Username { get; set; }
         public string IPAddress {get; set; }
+        public string Color{get; set;}
     }
 
 }

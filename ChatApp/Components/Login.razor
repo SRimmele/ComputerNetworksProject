@@ -8,18 +8,19 @@
 @inject UserRepository userRepository; 
 @inject UserManager userManager; 
 
-<input type="color" /> 
+<input type="color" @bind="color"> 
 <input type="text" @bind="username" placeholder="Enter Username Here...">
 <button @onclick="login">Submit</button>
 <p>@error</p>
 
 @code{
-
+    
+    private string color = "#000000"; 
     private string username = ""; 
     private string error = ""; 
 
     private void login(){
-        if(userManager.registerUser(httpContextAccessor, username) == false){
+        if(userManager.registerUser(httpContextAccessor, username, color) == false){
             error = "Username is taken."; 
         } 
     }
