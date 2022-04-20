@@ -38,5 +38,12 @@ namespace ChatApp.LogicComponents
             }
             return true;
         }
+
+        public User readLoggedInUser(IHttpContextAccessor httpContextAccessor){
+            var ipAddress = getIPAdress(httpContextAccessor);
+            var loggedInUser = _userRepository.Read(ipAddress); 
+            return loggedInUser;  
+        }
+
     }
 }

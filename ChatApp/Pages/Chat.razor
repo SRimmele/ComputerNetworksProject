@@ -3,7 +3,11 @@
 @using Microsoft.AspNetCore.SignalR.Client; 
 @using ChatApp.Hubs; 
 @using ChatApp.Models;  
-@using ChatApp.Components; 
+@using Microsoft.AspNetCore.Http; 
+@using ChatApp.LogicComponents; 
+
+@inject IHttpContextAccessor httpContextAccessor; 
+@inject UserManager userManager; 
 
 @implements IDisposable
 
@@ -15,6 +19,7 @@
     {
         <div>
             <p>
+            @message.User.Username: 
             <span>&nbsp;</span>
             @message.MessageText
             </p>
@@ -65,8 +70,7 @@
         public async Task Send(){
             Message message = new Message(); 
             message.MessageText = messageText; 
-            message.User = username; 
-
+            message.User = userManager.readLoggedInUser(httpContextAccessor); 
             await hubConnection.SendAsync("SendMessage", message); 
             messageText = ""; 
 
