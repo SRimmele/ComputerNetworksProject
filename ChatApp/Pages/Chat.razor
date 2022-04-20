@@ -2,7 +2,8 @@
 
 @using Microsoft.AspNetCore.SignalR.Client; 
 @using ChatApp.Hubs; 
-@using ChatApp.Models; 
+@using ChatApp.Models;  
+@using ChatApp.Components; 
 
 @implements IDisposable
 
@@ -14,6 +15,7 @@
     {
         <div>
             <p>
+            <span>&nbsp;</span>
             @message.MessageText
             </p>
         </div>
@@ -32,8 +34,9 @@
 @code{ 
         private HubConnection hubConnection; 
         private List<Message> messages = new List<Message>(); 
-        private List<Message> usernames = new List<Message>(); 
+
         private string messageText{get; set;}
+        private User username{get; set;}
 
         async protected override Task OnInitializedAsync()
         {
@@ -51,7 +54,6 @@
         }
 
         public void onReceiveMessage(Message message){
-            
             messages.Add(message);
             StateHasChanged(); 
         } 
@@ -63,9 +65,11 @@
         public async Task Send(){
             Message message = new Message(); 
             message.MessageText = messageText; 
+            message.User = username; 
 
             await hubConnection.SendAsync("SendMessage", message); 
             messageText = ""; 
+
         }
 }
 

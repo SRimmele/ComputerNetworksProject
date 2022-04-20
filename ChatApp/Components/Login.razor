@@ -1,3 +1,4 @@
+@using ChatApp.LogicComponents
 @using Microsoft.AspNetCore.Http; 
 @using ChatApp.Repositories; 
 @using ChatApp.Models; 
@@ -5,9 +6,10 @@
 
 @inject IHttpContextAccessor httpContextAccessor; 
 @inject UserRepository userRepository; 
+@inject UserManager userManager; 
 
 <input type="color" /> 
-<input type="text" @bind="username">
+<input type="text" @bind="username" placeholder="Enter Username Here...">
 <button @onclick="login">Submit</button>
 <p>@error</p>
 
@@ -17,32 +19,10 @@
     private string error = ""; 
 
     private void login(){
-        if(registerUser() == false){
+        if(userManager.registerUser(httpContextAccessor, username) == false){
             error = "Username is taken."; 
         } 
     }
 
-    private bool registerUser(){
-        if(userRepository.Read(getIPAdress()) == null){
-            if(userRepository.ReadAll().Any(u => u.Username == username)){
-                return false; 
-            }
-            var newUser = new User
-            {
-                Username = username, 
-                IPAddress = getIPAdress()
-            }; 
-            userRepository.Create(newUser); 
-        } 
-        return true; 
-    }
 
-    private string getIPAdress(){
-        var remoteIpAddress = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress;
-        if(remoteIpAddress?.IsIPv4MappedToIPv6 == true){
-            return remoteIpAddress.MapToIPv4().ToString(); 
-        }
-
-        return remoteIpAddress?.ToString(); 
-    }
 }

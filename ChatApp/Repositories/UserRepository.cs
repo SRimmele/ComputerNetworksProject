@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System; 
 
 namespace ChatApp.Repositories{
-    class UserRepository{
+    public class UserRepository{
         private static Dictionary<string, User> users = new Dictionary<string, User>(); 
         public static event EventHandler Change; 
 
