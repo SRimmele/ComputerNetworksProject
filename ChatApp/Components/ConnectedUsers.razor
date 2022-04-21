@@ -1,0 +1,40 @@
+@using ChatApp.Models;
+@using ChatApp.Repositories;  
+
+@inject UserRepository userRepository
+@inject ConnectedUserRepository connectedUserRepository
+<h1>Connected Users</h1>
+<ul>
+    @foreach(var connectedUser in connectedUsers){
+        <li>
+            @connectedUser.IPAddress
+        </li>
+    }
+
+</ul>
+
+
+@code{
+    private IEnumerable<User> connectedUsers = new List<User>(); 
+        
+    protected override void OnAfterRender(bool firstRender){
+        if(firstRender == true){
+            readConnectedUsers(); 
+            ConnectedUserRepository.Change += refresh; 
+        }
+        base.OnAfterRender(firstRender); 
+    }
+
+    private async void refresh(object caller, EventArgs args){
+         await InvokeAsync(() =>{
+            readConnectedUsers(); 
+            StateHasChanged(); 
+        } ); 
+    }
+
+    private void readConnectedUsers(){
+        var connectedUsersIPAddresses = connectedUserRepository.ReadAll().Select(i => i.IPAddress); 
+        connectedUsers = userRepository.ReadAll().Where(p => connectedUsersIPAddresses.Contains(p.IPAddress)); 
+
+    }
+}

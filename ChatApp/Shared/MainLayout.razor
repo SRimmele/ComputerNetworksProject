@@ -31,12 +31,16 @@
 @code{
         protected override void OnAfterRender(bool firstRender)
         {
-            UserRepository.Change += refresh; 
+            if(firstRender == true){
+                UserRepository.Change += refresh; 
+            }
             base.OnAfterRender(firstRender);
         }
     
-    private void refresh(object caller, EventArgs args){
-        StateHasChanged(); 
+    private async void refresh(object caller, EventArgs args){
+        await InvokeAsync(() =>{
+            StateHasChanged(); 
+        } ); 
     }
 
     private bool isLoggedIn(){

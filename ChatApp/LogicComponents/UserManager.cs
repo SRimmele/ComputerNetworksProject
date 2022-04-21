@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Linq;
+using ChatApp.Helpers;
 using ChatApp.Models;
 using ChatApp.Repositories;
 using Microsoft.AspNetCore.Http;
@@ -14,12 +16,8 @@ namespace ChatApp.LogicComponents
         public static string getIPAdress(IHttpContextAccessor httpContextAccessor)
         {
             var remoteIpAddress = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress;
-            if (remoteIpAddress?.IsIPv4MappedToIPv6 == true)
-            {
-                return remoteIpAddress.MapToIPv4().ToString();
-            }
-
-            return remoteIpAddress?.ToString();
+            return IPAddressHelper.ToString(remoteIpAddress); 
+            
         }
         public bool registerUser(IHttpContextAccessor httpContextAccessor, string username, string color)
         {
@@ -46,5 +44,7 @@ namespace ChatApp.LogicComponents
             return loggedInUser;  
         }
 
+    
+            
     }
 }

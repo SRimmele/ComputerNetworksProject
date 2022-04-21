@@ -36,6 +36,7 @@ namespace ChatApp
             services.AddTransient<UserRepository>(); 
             services.AddHttpContextAccessor(); 
             services.AddTransient<UserManager>(); 
+            services.AddTransient<ConnectedUserRepository>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
