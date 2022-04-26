@@ -3,12 +3,13 @@
 
 @inject UserRepository userRepository
 @inject ConnectedUserRepository connectedUserRepository
-<h1>Connected Users</h1>
+
+<h4>Connected Users</h4>
 <ul>
     @foreach(var connectedUser in connectedUsers){
         <li>
             @connectedUser.IPAddress
-            @connectedUser.Username
+            <span style="color: @connectedUser.Color">@connectedUser.Username</span>
         </li>
     }
 

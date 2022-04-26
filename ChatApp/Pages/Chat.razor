@@ -82,7 +82,6 @@
             message.User = userManager.readLoggedInUser(httpContextAccessor); 
             await hubConnection.SendAsync("SendMessage", message); 
             messageText = ""; 
-
         }
 }
 
