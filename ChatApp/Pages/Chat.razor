@@ -14,38 +14,43 @@
 @inject NavigationManager _navigationManager; 
 <h1>Chat</h1>
 <!--Display Messages Here--> 
-<div>
-    @foreach (var message in messages)
-    {
-        <div>
-            <p>
-            <span style="color: @message.User.Color">@message.User.Username: </span>
-            <span>&nbsp;</span>
-            @message.MessageText
-            </p>
-        </div>
-    }
-</div> 
-<!--Chat Box-->
-<div>
-    <div class="panel-footer">
-        <div class="input-group" id="myForm">
-            <input id="textMessageInput" @bind="messageText" type="text" class="form-control input-sm chat_input" placeholder="Write your message here...">
-        <button class="btn btn-primary" @onclick="Send">Send</button>
+<body>
+    <div>
+        @foreach (var message in messages)
+        {
+            <div>
+                <p>
+                <span style="color: @message.User.Color">@message.User.Username: </span>
+                <span>&nbsp;</span>
+                @message.MessageText
+                </p>
+            </div>
+        }
+    </div> 
+    <!--Chat Box-->
+    <br>
+    <div>
+        <div class="panel-footer">
+            <div class="input-group" id="myForm">
+                <input id="textMessageInput" @bind="messageText" type="text" class="form-control input-sm chat_input" placeholder="Write your message here...">
+            <button class="btn btn-primary" @onclick="Send">Send</button>
+            </div>
         </div>
     </div>
-</div>
+</body>
 <!--Display Users-->
-<div>
-    <ConnectedUsers/> 
-</div>
+<footer>
+    <br><br><br>
+    <div>
+        <ConnectedUsers/>
+    </div>
+</footer>
 
 @code{ 
         private HubConnection hubConnection; 
         private List<Message> messages = new List<Message>(); 
 
         private string messageText{get; set;}
-        private User username{get; set;}
 
         async protected override Task OnInitializedAsync()
         {
