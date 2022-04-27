@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ChatApp.Data;
 using ChatApp.Hubs; 
 using ChatApp.Repositories;
 using ChatApp.LogicComponents;
@@ -32,7 +32,6 @@ namespace ChatApp
             services.AddSignalR(); 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>(); 
             services.AddTransient<UserRepository>(); 
             services.AddHttpContextAccessor(); 
             services.AddTransient<UserManager>(); 
