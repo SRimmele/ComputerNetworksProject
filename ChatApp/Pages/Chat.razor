@@ -1,5 +1,6 @@
 @page "/"
 
+@using ChatApp.Helpers
 @using Microsoft.AspNetCore.SignalR.Client; 
 @using ChatApp.Hubs; 
 @using ChatApp.Models;  
@@ -8,6 +9,7 @@
 
 @inject IHttpContextAccessor httpContextAccessor; 
 @inject UserManager userManager; 
+@inject IJSRuntime jSRuntime; 
 
 @implements IDisposable
 
@@ -59,6 +61,7 @@
             hubConnection = new HubConnectionBuilder().WithUrl(connectionURL).Build(); 
             hubConnection.On<Message>("SendMessage", onReceiveMessage); 
             await hubConnection.StartAsync(); 
+            await NotificationHelper.RequestNotifPermission(jSRuntime); 
         }
 
         public async Task CloseHubConnection(){
@@ -70,6 +73,7 @@
         public void onReceiveMessage(Message message){
             messages.Add(message);
             StateHasChanged(); 
+            NotificationHelper.Notify(message.User.Username, new Notification{Body = message.MessageText}, jSRuntime); 
         } 
 
         public void Dispose(){

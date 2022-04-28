@@ -31,5 +31,12 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script>async function RequestNotifPermission(){
+        return Notification.requestPermission(); 
+    }
+    function notify(title, options){
+        new Notification(title, options); 
+    }
+    </script>
 </body>
 </html>
