@@ -9,4 +9,14 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <PropertyGroup>
+	  <StaticWebAssetBasePath>/</StaticWebAssetBasePath>
+  </PropertyGroup>
+
 </Project>
