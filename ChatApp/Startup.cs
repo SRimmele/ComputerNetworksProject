@@ -1,8 +1,10 @@
 using System.Net.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using LettuceEncrypt;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
@@ -32,6 +34,10 @@ namespace ChatApp
             services.AddSignalR(); 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services
+                .AddLettuceEncrypt()
+                .PersistDataToDirectory(new DirectoryInfo(@"/LettuceEncrypt"), null);
+
             services.AddTransient<UserRepository>(); 
             services.AddHttpContextAccessor(); 
             services.AddTransient<UserManager>(); 
