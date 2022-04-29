@@ -71,11 +71,14 @@
         hubConnection = null; 
     }
 
-    public void onReceiveMessage(Message message){
-        messages.Add(message);
-        StateHasChanged(); 
-        NotificationHelper.Notify(message.User.Username, new Notification{Body = message.MessageText}, jSRuntime); 
-    } 
+        public void onReceiveMessage(Message message){
+            messages.Add(message);
+            StateHasChanged(); 
+            var loggedInUser = userManager.readLoggedInUser(httpContextAccessor); 
+            if(loggedInUser.IPAddress != message.User.IPAddress){
+                NotificationHelper.Notify(message.User.Username, new Notification{Body = message.MessageText}, jSRuntime); 
+            }
+        } 
 
     public void Dispose(){
         CloseHubConnection(); 
