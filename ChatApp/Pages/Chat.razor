@@ -48,44 +48,54 @@
     </div>
 </footer>
 
-@code{ 
-        private HubConnection hubConnection; 
-        private List<Message> messages = new List<Message>(); 
+@code { 
+    private HubConnection hubConnection; 
+    private List<Message> messages = new List<Message>(); 
 
-        private string messageText{get; set;}
+    private string messageText{get; set;}
 
-        async protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
+    {
+        var baseURL = _navigationManager.BaseUri.Trim('/'); 
+        var connectionURL = baseURL + ChatHub.hubPath; 
+        hubConnection = new HubConnectionBuilder().WithUrl(connectionURL).Build(); 
+        hubConnection.On<Message>("SendMessage", onReceiveMessage); 
+        await hubConnection.StartAsync(); 
+        await RegisterConnectedUser();
+        await NotificationHelper.RequestNotifPermission(jSRuntime);
+    }
+
+    public async Task CloseHubConnection(){
+        await hubConnection.StopAsync(); 
+        await hubConnection.DisposeAsync(); 
+        hubConnection = null; 
+    }
+
+    public void onReceiveMessage(Message message){
+        messages.Add(message);
+        StateHasChanged(); 
+        NotificationHelper.Notify(message.User.Username, new Notification{Body = message.MessageText}, jSRuntime); 
+    } 
+
+    public void Dispose(){
+        CloseHubConnection(); 
+    }
+
+    public async Task Send(){
+        Message message = new Message(); 
+        message.MessageText = messageText; 
+        message.User = userManager.readLoggedInUser(httpContextAccessor); 
+        await hubConnection.SendAsync("SendMessage", message); 
+        messageText = ""; 
+    }
+
+    private async Task RegisterConnectedUser()
+    {
+        var connectedUser = new ConnectedUser
         {
-            var baseURL = _navigationManager.BaseUri.Trim('/'); 
-            var connectionURL = baseURL + ChatHub.hubPath; 
-            hubConnection = new HubConnectionBuilder().WithUrl(connectionURL).Build(); 
-            hubConnection.On<Message>("SendMessage", onReceiveMessage); 
-            await hubConnection.StartAsync(); 
-            await NotificationHelper.RequestNotifPermission(jSRuntime); 
-        }
-
-        public async Task CloseHubConnection(){
-            await hubConnection.StopAsync(); 
-            await hubConnection.DisposeAsync(); 
-            hubConnection = null; 
-        }
-
-        public void onReceiveMessage(Message message){
-            messages.Add(message);
-            StateHasChanged(); 
-            NotificationHelper.Notify(message.User.Username, new Notification{Body = message.MessageText}, jSRuntime); 
-        } 
-
-        public void Dispose(){
-            CloseHubConnection(); 
-        }
-
-        public async Task Send(){
-            Message message = new Message(); 
-            message.MessageText = messageText; 
-            message.User = userManager.readLoggedInUser(httpContextAccessor); 
-            await hubConnection.SendAsync("SendMessage", message); 
-            messageText = ""; 
-        }
+            IPAddress = userManager.readLoggedInUser(httpContextAccessor).IPAddress
+        };
+        await hubConnection.SendAsync("OnNewConnectedUser", connectedUser);
+    }
 }
 
