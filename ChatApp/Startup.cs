@@ -27,6 +27,10 @@ namespace ChatApp
             services.AddSignalR(); 
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services
+                .AddLettuceEncrypt()
+                .PersistDataToDirectory(new DirectoryInfo(@"/LettuceEncrypt"), null);
+
             services.AddTransient<UserRepository>(); 
             services.AddHttpContextAccessor(); 
             services.AddTransient<UserManager>(); 
