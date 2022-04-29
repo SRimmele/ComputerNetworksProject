@@ -1,6 +1,6 @@
 @using Microsoft.AspNetCore.Http; 
 @using ChatApp.Repositories; 
-@using ChatApp.Components; 
+@using ChatApp.LogicComponents
 
 @inject IHttpContextAccessor httpContextAccessor; 
 @inject UserRepository userRepository; 
@@ -18,24 +18,26 @@
         </div>
 
         <div class="content px-4">
-            @if(isLoggedIn()){
+            @if (isLoggedIn())
+            {
                 @Body
             }
-            else{
-                <Login/> 
+            else
+            {
+                <Login/>
             }
         </div>
     </div>
 </div>
 
 @code{
-        protected override void OnAfterRender(bool firstRender)
-        {
-            if(firstRender == true){
-                UserRepository.Change += refresh; 
-            }
-            base.OnAfterRender(firstRender);
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if(firstRender == true){
+            UserRepository.Change += refresh; 
         }
+        base.OnAfterRender(firstRender);
+    }
     
     private async void refresh(object caller, EventArgs args){
         await InvokeAsync(() =>{
@@ -43,16 +45,9 @@
         } ); 
     }
 
-    private bool isLoggedIn(){
-        return userRepository.Read(getIPAdress()) != null;
-    }
-        //Put into seperate Class *possibly*
-        private string getIPAdress(){
-        var remoteIpAddress = httpContextAccessor.HttpContext.Connection?.RemoteIpAddress;
-        if(remoteIpAddress?.IsIPv4MappedToIPv6 == true){
-            return remoteIpAddress.MapToIPv4().ToString(); 
-        }
-
-        return remoteIpAddress?.ToString(); 
+    private bool isLoggedIn()
+    {
+        var ipAddress = UserManager.getIPAdress(httpContextAccessor);
+        return userRepository.Read(ipAddress) != null;
     }
 }
